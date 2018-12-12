@@ -1,11 +1,6 @@
 require 'dotenv/load'
-require 'sinatra'
-
-require 'httparty'
-
-require_relative 'app/slack_authorizer'
-
-use SlackAuthorizer
+require 'sinatra/base'
+require 'slack-ruby-client'
 
 class CallSixteen < Sinatra::Base
 
