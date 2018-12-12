@@ -26,4 +26,15 @@ class CallSixteen < Sinatra::Base
     ""
   end
 
+  get 'list-user' do
+    base_url = "https://slack.com/api/users.list"
+    options = {
+      headers: { 'Content-Type' => 'application/json' },
+      query: {
+        token: ENV['SLACK_TOKEN']
+      }
+    }
+    HTTParty.get(base_url, options)
+  end
+
 end
