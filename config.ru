@@ -1,3 +1,2 @@
 require './api'
-require './auth'
-run Rack::Cascade.new [CallSixteen, Auth]
+run Rack::Cascade.new [CallSixteen]
