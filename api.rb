@@ -2,28 +2,50 @@ require 'dotenv/load'
 require 'sinatra/base'
 require 'slack-ruby-client'
 
-require 'slack-ruby-client'
+require 'byebug'
 
-Slack.configure do |config|
-  config.token = ENV['SLACK_API_TOKEN']
-  raise 'Missing ENV[SLACK_API_TOKEN]!' unless config.token
+def create_slack_client(slack_api_secret = ENV['SLACK_API_TOKEN'])
+  Slack.configure do |config|
+    config.token = slack_api_secret
+    raise 'Missing ENV[SLACK_API_TOKEN]!' unless config.token
+  end
+  Slack::Web::Client.new
 end
 
-client = Slack::Web::Client.new
-
-client.auth_test
-
-user_sixteen = ""
 
 class CallSixteen < Sinatra::Base
 
-  post '/slack/command' do
-    client.chat_postMessage(channel: '#general', text: 'Hello World', as_user: true)
+  attr_accessor :target_user
+
+  def initialize(app = nil)
+    super(app)
+    @client = create_slack_client();
+    @client.auth_test
+    @sixteen_user_id = "UD3GX8B53" # Nico
+    @target_user = nil
   end
 
-  get 'list-user' do
-    user = params["user"]
-    client.users_search(user: user)
+  post '/slack/command' do
+    channel = @target_user&.id || @sixteen_user_id
+    text, as_user = params["text"].split("|")
+    text = text.strip
+    as_user =  (as_user && as_user.strip == "true") ? params["user_id"] : false
+    @client.chat_postMessage(channel: channel, text: text, as_user: as_user)
+    ""
+  end
+
+  get '/list-user' do
+    user = params["user"] || ""
+    result = @client.users_list
+    return "" if result.nil?
+    if result["members"]
+      members = result["members"]
+      @target_user = members.select{|member| member["profile"]["display_name"] == user}
+      @target_user.to_json
+    else
+      "user cannot be found"
+    end
+
   end
 
 end
