@@ -52,7 +52,7 @@ DEPENDENCIES
   byebug
   dotenv
   sinatra
-  slack-ruby-client (~> 0.7.7)
+  slack-ruby-client
 
 RUBY VERSION
    ruby 2.5.1p57
