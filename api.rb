@@ -12,6 +12,13 @@ def create_slack_client(slack_api_secret = ENV['SLACK_API_TOKEN'])
   Slack::Web::Client.new
 end
 
+def format_message(content, user = nil)
+  header = "Someone needs you ! :priere: ."
+  body = ">>> #{content}"
+  footer = ""
+  header + "\n" + content + "\n" + footer
+end
+
 
 class CallSixteen < Sinatra::Base
 
@@ -30,7 +37,7 @@ class CallSixteen < Sinatra::Base
     text, as_user = params["text"].split("|")
     text = text.strip
     as_user =  (as_user && as_user.strip == "true") ? params["user_id"] : false
-    @client.chat_postMessage(channel: channel, text: text, as_user: as_user)
+    @client.chat_postMessage(channel: channel, text: format_message(text, nil), as_user: as_user)
     ""
   end
 
