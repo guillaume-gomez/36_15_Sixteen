@@ -14,7 +14,7 @@ end
 
 def format_message(content, user = nil, as_user = false)
   headers = [
-    "Someone needs you ! :priere: .",
+    "Someone needs you ! :prière: .",
     "Vite ! C'est urgent !",
     "On sait qu'on est pénible mais ...",
     "J'ai deja demandé aux autres, mais ils savent pas :(",
@@ -34,7 +34,7 @@ class CallSixteen < Sinatra::Base
     super(app)
     @client = create_slack_client();
     @client.auth_test
-    @sixteen_user_id = "UD3GX8B53" # Nico
+    @sixteen_user_id = "UD4FKSPT7" # Nico
     @target_user = nil
     # fetch users
     result = @client.users_list
@@ -48,7 +48,7 @@ class CallSixteen < Sinatra::Base
     text = text.strip
     user_info = @users.select{|user| user["id"] == params["user_id"]}.first
     as_user =  (as_user && as_user.strip == "true" && user_info) ? params["user_id"] : false
-    @client.chat_postMessage(channel: channel, text: format_message(text, user_info, as_user), as_user: as_user)
+    @client.chat_postMessage(channel: channel, text: format_message(text, user_info, as_user))
     ""
   end
 
