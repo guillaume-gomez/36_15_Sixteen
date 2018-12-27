@@ -12,7 +12,7 @@ def create_slack_client(slack_api_secret = ENV['SLACK_API_TOKEN'])
   Slack::Web::Client.new
 end
 
-def format_message(content, user = nil)
+def format_message(content, user = nil, as_user = false)
   headers = [
     "Someone needs you ! :priere: .",
     "Vite ! C'est urgent !",
@@ -21,8 +21,8 @@ def format_message(content, user = nil)
   ]
   header = headers.sample
   body = ">>> #{content}"
-  footer = ""
-  header + "\n" + content + "\n" + footer
+  footer = user && as_user ? "message de : *#{user["profile"]["display_name"]}*" : ""
+  header + "\n" + body + "\n" + footer
 end
 
 
@@ -36,14 +36,19 @@ class CallSixteen < Sinatra::Base
     @client.auth_test
     @sixteen_user_id = "UD3GX8B53" # Nico
     @target_user = nil
+    # fetch users
+    result = @client.users_list
+    members = result["members"] || []
+    @users = members.map{|member| member.slice("id", "profile") }
   end
 
   post '/slack/command' do
     channel = @target_user&.id || @sixteen_user_id
     text, as_user = params["text"].split("|")
     text = text.strip
-    as_user =  (as_user && as_user.strip == "true") ? params["user_id"] : false
-    @client.chat_postMessage(channel: channel, text: format_message(text, nil), as_user: as_user)
+    user_info = @users.select{|user| user["id"] == params["user_id"]}.first
+    as_user =  (as_user && as_user.strip == "true" && user_info) ? params["user_id"] : false
+    @client.chat_postMessage(channel: channel, text: format_message(text, user_info, as_user), as_user: as_user)
     ""
   end
 
