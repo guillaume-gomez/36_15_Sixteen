@@ -13,7 +13,13 @@ def create_slack_client(slack_api_secret = ENV['SLACK_API_TOKEN'])
 end
 
 def format_message(content, user = nil)
-  header = "Someone needs you ! :priere: ."
+  headers = [
+    "Someone needs you ! :priere: .",
+    "Vite ! C'est urgent !",
+    "On sait qu'on est pénible mais ...",
+    "J'ai deja demandé aux autres, mais ils savent pas :(",
+  ]
+  header = headers.sample
   body = ">>> #{content}"
   footer = ""
   header + "\n" + content + "\n" + footer
