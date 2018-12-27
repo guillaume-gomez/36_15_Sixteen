@@ -34,7 +34,7 @@ class CallSixteen < Sinatra::Base
     super(app)
     @client = create_slack_client();
     @client.auth_test
-    @sixteen_user_id = "UD4FKSPT7" # Nico
+    @sixteen_user_id = ENV["USER_ID"]
     @target_user = nil
     # fetch users
     result = @client.users_list
