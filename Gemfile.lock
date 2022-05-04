@@ -21,14 +21,16 @@ GEM
     json (2.5.1)
     minitest (5.14.2)
     multipart-post (2.0.0)
-    mustermann (1.0.3)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     rack (2.2.3)
-    rack-protection (2.0.4)
+    rack-protection (2.2.0)
       rack
-    sinatra (2.0.4)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.0)
       mustermann (~> 1.0)
-      rack (~> 2.0)
-      rack-protection (= 2.0.4)
+      rack (~> 2.2)
+      rack-protection (= 2.2.0)
       tilt (~> 2.0)
     slack-ruby-client (0.7.9)
       activesupport
@@ -38,7 +40,7 @@ GEM
       hashie
       json
       websocket-driver
-    tilt (2.0.9)
+    tilt (2.0.10)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     websocket-driver (0.7.0)
